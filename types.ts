@@ -174,4 +174,5 @@ export interface AppSettings {
   supabaseUrl: string;
   supabaseKey: string;
   enableRealtime: boolean;
+  theme?: 'light' | 'dark';
 }

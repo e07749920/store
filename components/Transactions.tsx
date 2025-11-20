@@ -233,14 +233,14 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
             <h2 className="text-3xl font-bold text-white">Material Transactions</h2>
-            <p className="text-slate-400 text-sm font-mono">Warehouse Logistics Control</p>
+            <p className="text-slate-600 dark:text-slate-400 text-sm font-mono">Warehouse Logistics Control</p>
         </div>
         
         <div className="flex gap-3 w-full md:w-auto">
-           <button onClick={() => setIsInboundModalOpen(true)} className="flex-1 md:flex-none px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-105">
+           <button onClick={() => setIsInboundModalOpen(true)} className="flex-1 md:flex-none px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-105">
                <ArrowDownLeft className="w-4 h-4" /> Inbound
            </button>
-           <button onClick={() => setIsOutboundModalOpen(true)} className="flex-1 md:flex-none px-4 py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-105">
+           <button onClick={() => setIsOutboundModalOpen(true)} className="flex-1 md:flex-none px-4 py-3 bg-rose-600 hover:bg-rose-500 text-slate-900 dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-105">
                <ArrowUpRight className="w-4 h-4" /> Outbound
            </button>
         </div>
@@ -248,19 +248,19 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
 
       {/* TABS & SEARCH */}
       <div className="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center shadow-md">
-         <div className="bg-white/5 p-1 rounded-xl flex w-full md:w-auto">
-             <button onClick={() => setActiveTab('IN')} className={`flex-1 md:flex-none px-8 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'IN' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}>Inbound</button>
-             <button onClick={() => setActiveTab('OUT')} className={`flex-1 md:flex-none px-8 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'OUT' ? 'bg-rose-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}>Outbound</button>
+         <div className="bg-slate-100 dark:bg-white/5 p-1 rounded-xl flex w-full md:w-auto">
+             <button onClick={() => setActiveTab('IN')} className={`flex-1 md:flex-none px-8 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'IN' ? 'bg-emerald-600 text-slate-900 dark:text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-white'}`}>Inbound</button>
+             <button onClick={() => setActiveTab('OUT')} className={`flex-1 md:flex-none px-8 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'OUT' ? 'bg-rose-600 text-slate-900 dark:text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-white'}`}>Outbound</button>
          </div>
          
          <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 dark:text-slate-400" />
             <input 
                 type="text" 
                 value={searchTerm} 
                 onChange={e => setSearchTerm(e.target.value)} 
                 placeholder={activeTab === 'OUT' ? "Search Issue No, Project, Receiver..." : "Search GR No, PO, Reference..."}
-                className="bg-transparent border-none outline-none text-white w-full pl-9 font-mono text-sm placeholder:text-slate-600" 
+                className="bg-transparent border-none outline-none text-slate-900 dark:text-white w-full pl-9 font-mono text-sm placeholder:text-slate-600" 
             />
          </div>
       </div>
@@ -268,7 +268,7 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
       {/* === LIST VIEW (GROUPED) === */}
       <div className="space-y-4">
           {/* Desktop Table Header */}
-          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider bg-black/20 rounded-xl border border-white/5">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-600 dark:text-slate-500 uppercase tracking-wider bg-slate-100 dark:bg-black/20 rounded-xl border border-slate-200 dark:border-white/5">
               <div className="col-span-2">Date</div>
               <div className="col-span-3">{activeTab === 'OUT' ? 'Issue Number' : 'GR Number'}</div>
               <div className="col-span-2">{activeTab === 'OUT' ? 'Receiver' : 'Receiver / Dept'}</div>
@@ -284,10 +284,10 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
               const Icon = activeTab === 'OUT' ? FileText : PackagePlus;
 
               return (
-                <div key={g.groupKey} className={`glass-panel rounded-2xl overflow-hidden border transition-all duration-300 ${isExpanded ? `border-${themeColor}-500/30 shadow-lg` : 'border-white/5'}`}>
+                <div key={g.groupKey} className={`glass-panel rounded-2xl overflow-hidden border transition-all duration-300 ${isExpanded ? `border-${themeColor}-500/30 shadow-lg` : 'border-slate-200 dark:border-white/5'}`}>
                     
                     {/* Group Header */}
-                    <div onClick={() => toggleGroupExpansion(g.groupKey)} className="p-4 md:p-5 cursor-pointer hover:bg-white/5 transition-colors">
+                    <div onClick={() => toggleGroupExpansion(g.groupKey)} className="p-4 md:p-5 cursor-pointer hover:bg-slate-100 dark:bg-white/5 transition-colors">
                         {/* Mobile Header */}
                         <div className="md:hidden">
                             <div className="flex justify-between items-start mb-3">
@@ -296,43 +296,43 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
                                         <Icon className="w-4 h-4" />
                                         <span>{g.groupKey}</span>
                                     </div>
-                                    <span className="text-xs text-slate-500 font-mono">{g.date}</span>
+                                    <span className="text-xs text-slate-600 dark:text-slate-500 font-mono">{g.date}</span>
                                 </div>
                                 <span className={`bg-${themeColor}-500/10 text-${themeColor}-400 border border-${themeColor}-500/20 px-2 py-1 rounded text-[10px] font-bold`}>
                                     {g.totalQty} Units
                                 </span>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs text-slate-300">
-                                <div className="bg-black/20 p-2 rounded">
-                                    <span className="block text-[10px] text-slate-500 uppercase">Ref/PO</span>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-slate-700 dark:text-slate-300">
+                                <div className="bg-slate-100 dark:bg-black/20 p-2 rounded">
+                                    <span className="block text-[10px] text-slate-600 dark:text-slate-500 uppercase">Ref/PO</span>
                                     {g.secondaryInfo}
                                 </div>
-                                <div className="bg-black/20 p-2 rounded">
-                                    <span className="block text-[10px] text-slate-500 uppercase">Person</span>
+                                <div className="bg-slate-100 dark:bg-black/20 p-2 rounded">
+                                    <span className="block text-[10px] text-slate-600 dark:text-slate-500 uppercase">Person</span>
                                     {g.receiver}
                                 </div>
                             </div>
                             <div className="flex justify-center mt-3">
-                                {isExpanded ? <ChevronUp className="w-5 h-5 text-slate-500" /> : <ChevronDown className="w-5 h-5 text-slate-500" />}
+                                {isExpanded ? <ChevronUp className="w-5 h-5 text-slate-600 dark:text-slate-500" /> : <ChevronDown className="w-5 h-5 text-slate-600 dark:text-slate-500" />}
                             </div>
                         </div>
 
                         {/* Desktop Header */}
                         <div className="hidden md:grid grid-cols-12 gap-4 items-center">
-                            <div className="col-span-2 text-slate-300 font-mono text-sm">{g.date}</div>
-                            <div className={`col-span-3 font-bold text-white flex items-center gap-2`}>
+                            <div className="col-span-2 text-slate-700 dark:text-slate-300 font-mono text-sm">{g.date}</div>
+                            <div className={`col-span-3 font-bold text-slate-900 dark:text-white flex items-center gap-2`}>
                                 <div className={`p-1.5 bg-${themeColor}-500/10 rounded text-${themeColor}-400`}><Icon className="w-4 h-4" /></div>
                                 {g.groupKey}
                             </div>
-                            <div className="col-span-2 text-sm text-slate-300">{g.receiver}</div>
+                            <div className="col-span-2 text-sm text-slate-700 dark:text-slate-300">{g.receiver}</div>
                             <div className="col-span-2">
-                                <span className="px-2 py-1 rounded bg-white/5 text-xs font-mono text-slate-400 border border-white/10">{g.secondaryInfo}</span>
+                                <span className="px-2 py-1 rounded bg-slate-100 dark:bg-white/5 text-xs font-mono text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-white/10">{g.secondaryInfo}</span>
                             </div>
                             <div className="col-span-2 text-center">
-                                <span className={`text-${themeColor}-400 font-bold`}>{g.totalQty}</span> <span className="text-slate-500 text-xs">units</span>
+                                <span className={`text-${themeColor}-400 font-bold`}>{g.totalQty}</span> <span className="text-slate-600 dark:text-slate-500 text-xs">units</span>
                             </div>
                             <div className="col-span-1 text-right">
-                                <button className={`p-2 rounded-lg transition-all ${isExpanded ? `bg-${themeColor}-600 text-white` : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                                <button className={`p-2 rounded-lg transition-all ${isExpanded ? `bg-${themeColor}-600 text-white` : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:bg-white/10'}`}>
                                     {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                                 </button>
                             </div>
@@ -341,10 +341,10 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
 
                     {/* Expanded Items Table */}
                     {isExpanded && (
-                        <div className="bg-black/30 border-t border-white/5 p-0 md:p-4 animate-in slide-in-from-top-2">
+                        <div className="bg-slate-200 dark:bg-black/30 border-t border-slate-200 dark:border-white/5 p-0 md:p-4 animate-in slide-in-from-top-2">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left text-sm">
-                                    <thead className="bg-white/5 text-[10px] uppercase text-slate-500 font-bold">
+                                    <thead className="bg-slate-100 dark:bg-white/5 text-[10px] uppercase text-slate-600 dark:text-slate-500 font-bold">
                                         <tr>
                                             <th className="px-4 py-3 pl-6">Material No</th>
                                             <th className="px-4 py-3">Description</th>
@@ -359,14 +359,14 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {g.items.map((item, idx) => (
-                                            <tr key={idx} className="hover:bg-white/5">
+                                            <tr key={idx} className="hover:bg-slate-100 dark:bg-white/5">
                                                 <td className={`px-4 py-3 pl-6 font-mono text-${themeColor}-300`}>{item.materialNo}</td>
                                                 <td className="px-4 py-3 font-bold text-slate-200">{item.itemName}</td>
                                                 <td className="px-4 py-3 text-center font-mono font-bold text-white">{item.quantity}</td>
-                                                <td className="px-4 py-3 text-xs font-mono text-slate-400">
+                                                <td className="px-4 py-3 text-xs font-mono text-slate-600 dark:text-slate-400">
                                                     {activeTab === 'OUT' ? item.glAccount : (item.reference || item.wbs || '-')}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-slate-500 italic">{item.remark || '-'}</td>
+                                                <td className="px-4 py-3 text-xs text-slate-600 dark:text-slate-500 italic">{item.remark || '-'}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -379,7 +379,7 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
           })}
 
           {currentData.length === 0 && (
-             <div className="text-center py-12 text-slate-500 glass-panel rounded-2xl border border-white/5">
+             <div className="text-center py-12 text-slate-600 dark:text-slate-500 glass-panel rounded-2xl border border-slate-200 dark:border-white/5">
                  <Box className="w-12 h-12 mx-auto mb-3 opacity-20" />
                  No {activeTab === 'IN' ? 'Inbound' : 'Outbound'} transactions found.
              </div>
@@ -387,11 +387,11 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
       </div>
 
       {/* PAGINATION CONTROLS */}
-      <div className="flex justify-between items-center bg-black/20 p-4 rounded-2xl border border-white/5">
-         <div className="text-xs text-slate-400">Page <span className="text-white font-bold">{currentPage}</span> of {totalPages || 1}</div>
+      <div className="flex justify-between items-center bg-slate-100 dark:bg-black/20 p-4 rounded-2xl border border-slate-200 dark:border-white/5">
+         <div className="text-xs text-slate-600 dark:text-slate-400">Page <span className="text-slate-900 dark:text-white font-bold">{currentPage}</span> of {totalPages || 1}</div>
          <div className="flex gap-2">
-            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg disabled:opacity-30 text-white"><ChevronLeft className="w-4 h-4" /></button>
-            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg disabled:opacity-30 text-white"><ChevronRight className="w-4 h-4" /></button>
+            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 rounded-lg disabled:opacity-30 text-white"><ChevronLeft className="w-4 h-4" /></button>
+            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 rounded-lg disabled:opacity-30 text-white"><ChevronRight className="w-4 h-4" /></button>
          </div>
       </div>
 
@@ -402,9 +402,9 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setIsInboundModalOpen(false)}></div>
             <div className="relative w-full max-w-2xl glass-panel bg-[#0a0a0a] rounded-3xl p-6 border border-emerald-500/20 animate-in zoom-in-95 max-h-[90vh] overflow-y-auto custom-scrollbar">
-                <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4 sticky top-0 bg-[#0a0a0a] z-10">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><ArrowDownLeft className="w-5 h-5 text-emerald-500" /> Incoming Material (GR)</h3>
-                    <button onClick={() => setIsInboundModalOpen(false)} className="text-slate-400 hover:text-white"><X /></button>
+                <div className="flex justify-between items-center mb-6 border-b border-slate-300 dark:border-white/10 pb-4 sticky top-0 bg-[#0a0a0a] z-10">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2"><ArrowDownLeft className="w-5 h-5 text-emerald-500" /> Incoming Material (GR)</h3>
+                    <button onClick={() => setIsInboundModalOpen(false)} className="text-slate-600 dark:text-slate-400 hover:text-white"><X /></button>
                 </div>
                 <form onSubmit={handleCreateInbound} className="space-y-5">
                     {/* Material Select */}
@@ -412,46 +412,46 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1">
                                 <label className="text-xs font-bold text-emerald-400 uppercase mb-2 block">Select Material</label>
-                                <select required value={selectedMaterialId} onChange={(e) => setSelectedMaterialId(e.target.value)} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500">
+                                <select required value={selectedMaterialId} onChange={(e) => setSelectedMaterialId(e.target.value)} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500">
                                     <option value="">Select Material...</option>
                                     {items?.map(i => <option key={i.id} value={i.id}>{i.name} ({i.materialNo})</option>)}
                                 </select>
                             </div>
                             <div className="w-full md:w-32">
                                 <label className="text-xs font-bold text-emerald-400 uppercase mb-2 block">Qty</label>
-                                <input type="number" min="1" required value={txQty} onChange={e => setTxQty(parseInt(e.target.value))} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-center font-bold focus:border-emerald-500" />
+                                <input type="number" min="1" required value={txQty} onChange={e => setTxQty(parseInt(e.target.value))} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-center font-bold focus:border-emerald-500" />
                             </div>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-bold text-slate-500 mb-2">GR Number</label>
-                            <input type="text" required value={inFormData.grNumber} onChange={e => setInFormData({...inFormData, grNumber: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500 font-mono" placeholder="GR-2024-..." />
+                            <label className="block text-xs font-bold text-slate-600 dark:text-slate-500 mb-2">GR Number</label>
+                            <input type="text" required value={inFormData.grNumber} onChange={e => setInFormData({...inFormData, grNumber: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500 font-mono" placeholder="GR-2024-..." />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-slate-500 mb-2">Purchase Order (PO)</label>
-                            <input type="text" value={inFormData.po} onChange={e => setInFormData({...inFormData, po: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500 font-mono" placeholder="PO-..." />
+                            <label className="block text-xs font-bold text-slate-600 dark:text-slate-500 mb-2">Purchase Order (PO)</label>
+                            <input type="text" value={inFormData.po} onChange={e => setInFormData({...inFormData, po: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500 font-mono" placeholder="PO-..." />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-slate-500 mb-2">WBS / Project</label>
-                            <input type="text" value={inFormData.wbs} onChange={e => setInFormData({...inFormData, wbs: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500" />
+                            <label className="block text-xs font-bold text-slate-600 dark:text-slate-500 mb-2">WBS / Project</label>
+                            <input type="text" value={inFormData.wbs} onChange={e => setInFormData({...inFormData, wbs: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500" />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-slate-500 mb-2">Receiver / By</label>
-                            <input type="text" required value={inFormData.goodReceipt} onChange={e => setInFormData({...inFormData, goodReceipt: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500" placeholder="Received by..." />
+                            <label className="block text-xs font-bold text-slate-600 dark:text-slate-500 mb-2">Receiver / By</label>
+                            <input type="text" required value={inFormData.goodReceipt} onChange={e => setInFormData({...inFormData, goodReceipt: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500" placeholder="Received by..." />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-xs font-bold text-slate-500 mb-2">Reference Doc</label>
-                            <input type="text" value={inFormData.reference} onChange={e => setInFormData({...inFormData, reference: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500" placeholder="Delivery Note / Surat Jalan" />
+                            <label className="block text-xs font-bold text-slate-600 dark:text-slate-500 mb-2">Reference Doc</label>
+                            <input type="text" value={inFormData.reference} onChange={e => setInFormData({...inFormData, reference: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500" placeholder="Delivery Note / Surat Jalan" />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-2">Remarks</label>
-                        <textarea value={inFormData.remarks} onChange={e => setInFormData({...inFormData, remarks: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500 h-20 resize-none" placeholder="Notes..."></textarea>
+                        <label className="block text-xs font-bold text-slate-600 dark:text-slate-500 mb-2">Remarks</label>
+                        <textarea value={inFormData.remarks} onChange={e => setInFormData({...inFormData, remarks: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-emerald-500 h-20 resize-none" placeholder="Notes..."></textarea>
                     </div>
                     <div className="pt-4 flex justify-end gap-3 sticky bottom-0 bg-[#0a0a0a] pb-2">
-                         <button type="button" onClick={() => setIsInboundModalOpen(false)} className="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold">Cancel</button>
-                         <button type="submit" disabled={isSaving} className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 disabled:opacity-50">
+                         <button type="button" onClick={() => setIsInboundModalOpen(false)} className="px-6 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white font-bold">Cancel</button>
+                         <button type="submit" disabled={isSaving} className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white font-bold rounded-xl shadow-lg flex items-center gap-2 disabled:opacity-50">
                              {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />} Confirm GR
                          </button>
                     </div>
@@ -465,52 +465,52 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setIsOutboundModalOpen(false)}></div>
             <div className="relative w-full max-w-2xl glass-panel bg-[#0a0a0a] rounded-3xl p-6 border border-rose-500/20 animate-in zoom-in-95 max-h-[90vh] overflow-y-auto custom-scrollbar">
-                <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4 sticky top-0 bg-[#0a0a0a] z-10">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Send className="w-5 h-5 text-rose-500" /> New Material Issue</h3>
-                    <button onClick={() => setIsOutboundModalOpen(false)} className="text-slate-400 hover:text-white"><X /></button>
+                <div className="flex justify-between items-center mb-6 border-b border-slate-300 dark:border-white/10 pb-4 sticky top-0 bg-[#0a0a0a] z-10">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2"><Send className="w-5 h-5 text-rose-500" /> New Material Issue</h3>
+                    <button onClick={() => setIsOutboundModalOpen(false)} className="text-slate-600 dark:text-slate-400 hover:text-white"><X /></button>
                 </div>
                 <form onSubmit={handleCreateOutbound} className="space-y-5">
                     {/* Material Select */}
-                    <div className="bg-white/5 p-4 rounded-xl border border-white/5">
+                    <div className="bg-slate-100 dark:bg-white/5 p-4 rounded-xl border border-slate-200 dark:border-white/5">
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1">
                                 <label className="text-xs font-bold text-rose-400 uppercase mb-2 block">Select Material</label>
-                                <select required value={selectedMaterialId} onChange={(e) => setSelectedMaterialId(e.target.value)} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-rose-500">
+                                <select required value={selectedMaterialId} onChange={(e) => setSelectedMaterialId(e.target.value)} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-rose-500">
                                     <option value="">Select Material...</option>
                                     {items?.map(i => <option key={i.id} value={i.id}>{i.name} | Stock: {i.quantity}</option>)}
                                 </select>
                             </div>
                             <div className="w-full md:w-32">
                                 <label className="text-xs font-bold text-rose-400 uppercase mb-2 block">Qty</label>
-                                <input type="number" min="1" required value={txQty} onChange={e => setTxQty(parseInt(e.target.value))} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-center font-bold focus:border-rose-500" />
+                                <input type="number" min="1" required value={txQty} onChange={e => setTxQty(parseInt(e.target.value))} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-center font-bold focus:border-rose-500" />
                             </div>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-2"><FileText className="w-3 h-3" /> Issue Number</label>
-                            <input type="text" required value={outFormData.issueNumber} onChange={e => setOutFormData({...outFormData, issueNumber: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-rose-500 font-mono" placeholder="ISS-2024-..." />
+                            <label className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-500 uppercase mb-2"><FileText className="w-3 h-3" /> Issue Number</label>
+                            <input type="text" required value={outFormData.issueNumber} onChange={e => setOutFormData({...outFormData, issueNumber: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-rose-500 font-mono" placeholder="ISS-2024-..." />
                         </div>
                         <div>
-                            <label className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-2"><Hash className="w-3 h-3" /> WBS Element</label>
-                            <input type="text" value={outFormData.wbs} onChange={e => setOutFormData({...outFormData, wbs: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-rose-500 font-mono" />
+                            <label className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-500 uppercase mb-2"><Hash className="w-3 h-3" /> WBS Element</label>
+                            <input type="text" value={outFormData.wbs} onChange={e => setOutFormData({...outFormData, wbs: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-rose-500 font-mono" />
                         </div>
                         <div>
-                            <label className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-2"><CreditCard className="w-3 h-3" /> GL Account</label>
-                            <input type="text" value={outFormData.glAccount} onChange={e => setOutFormData({...outFormData, glAccount: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-rose-500" />
+                            <label className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-500 uppercase mb-2"><CreditCard className="w-3 h-3" /> GL Account</label>
+                            <input type="text" value={outFormData.glAccount} onChange={e => setOutFormData({...outFormData, glAccount: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-rose-500" />
                         </div>
                         <div>
-                            <label className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-2"><User className="w-3 h-3" /> Receiver</label>
-                            <input type="text" required value={outFormData.goodReceipt} onChange={e => setOutFormData({...outFormData, goodReceipt: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-rose-500" />
+                            <label className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-500 uppercase mb-2"><User className="w-3 h-3" /> Receiver</label>
+                            <input type="text" required value={outFormData.goodReceipt} onChange={e => setOutFormData({...outFormData, goodReceipt: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-rose-500" />
                         </div>
                     </div>
                     <div>
-                        <label className="text-xs font-bold text-slate-500 uppercase mb-2 block">Remarks</label>
-                        <textarea value={outFormData.remarks} onChange={e => setOutFormData({...outFormData, remarks: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-rose-500 h-20 resize-none" placeholder="Notes..."></textarea>
+                        <label className="text-xs font-bold text-slate-600 dark:text-slate-500 uppercase mb-2 block">Remarks</label>
+                        <textarea value={outFormData.remarks} onChange={e => setOutFormData({...outFormData, remarks: e.target.value})} className="w-full bg-black/50 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-rose-500 h-20 resize-none" placeholder="Notes..."></textarea>
                     </div>
                     <div className="pt-4 flex justify-end gap-3 sticky bottom-0 bg-[#0a0a0a] pb-2">
-                         <button type="button" onClick={() => setIsOutboundModalOpen(false)} className="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold">Cancel</button>
-                         <button type="submit" disabled={isSaving} className="px-8 py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 disabled:opacity-50">
+                         <button type="button" onClick={() => setIsOutboundModalOpen(false)} className="px-6 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white font-bold">Cancel</button>
+                         <button type="submit" disabled={isSaving} className="px-8 py-3 bg-rose-600 hover:bg-rose-500 text-slate-900 dark:text-white font-bold rounded-xl shadow-lg flex items-center gap-2 disabled:opacity-50">
                              {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Send className="w-4 h-4" />} Confirm Issue
                          </button>
                     </div>

@@ -215,25 +215,25 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
 
   // --- SHARED DETAIL VIEW COMPONENT (For Table & Mobile Card) ---
   const renderDetailContent = (item: InventoryItem) => (
-    <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 border-t border-white/5 bg-indigo-950/5 inner-shadow text-sm">
+    <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 border-t border-slate-200 dark:border-white/5 bg-indigo-950/5 inner-shadow text-sm">
         
         {/* Detail Column 1: Procurement */}
         <div className="space-y-3">
             <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-2">
                 <Briefcase className="w-4 h-4" /> Procurement Data
             </h4>
-            <div className="grid grid-cols-2 gap-3 p-3 md:p-4 rounded-xl bg-black/20 border border-white/5">
+            <div className="grid grid-cols-2 gap-3 p-3 md:p-4 rounded-xl bg-slate-100 dark:bg-black/20 border border-slate-200 dark:border-white/5">
                 <div>
-                    <p className="text-slate-500 text-[10px] uppercase">PR Status</p>
-                    <p className="text-white font-mono text-xs md:text-sm">{item.prStatus || 'N/A'}</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">PR Status</p>
+                    <p className="text-slate-900 dark:text-white font-mono text-xs md:text-sm">{item.prStatus || 'N/A'}</p>
                 </div>
                 <div>
-                    <p className="text-slate-500 text-[10px] uppercase">PR Number</p>
-                    <p className="text-white font-mono text-xs md:text-sm">{item.prNumber || '-'}</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">PR Number</p>
+                    <p className="text-slate-900 dark:text-white font-mono text-xs md:text-sm">{item.prNumber || '-'}</p>
                 </div>
                 <div className="col-span-2">
-                    <p className="text-slate-500 text-[10px] uppercase">WBS Element</p>
-                    <p className="text-white font-mono text-xs md:text-sm">{item.wbs || 'Not Assigned'}</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">WBS Element</p>
+                    <p className="text-slate-900 dark:text-white font-mono text-xs md:text-sm">{item.wbs || 'Not Assigned'}</p>
                 </div>
             </div>
         </div>
@@ -243,40 +243,40 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
             <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
                 <Scale className="w-4 h-4" /> Stock Parameters
             </h4>
-            <div className="grid grid-cols-2 gap-3 p-3 md:p-4 rounded-xl bg-black/20 border border-white/5">
+            <div className="grid grid-cols-2 gap-3 p-3 md:p-4 rounded-xl bg-slate-100 dark:bg-black/20 border border-slate-200 dark:border-white/5">
                 <div>
-                    <p className="text-slate-500 text-[10px] uppercase">Min Stock</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">Min Stock</p>
                     <p className="text-rose-400 font-mono font-bold text-xs md:text-sm">{item.minStock}</p>
                 </div>
                 <div>
-                    <p className="text-slate-500 text-[10px] uppercase">Max Stock</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">Max Stock</p>
                     <p className="text-emerald-400 font-mono font-bold text-xs md:text-sm">{item.maxStock || '-'}</p>
                 </div>
                 <div>
-                    <p className="text-slate-500 text-[10px] uppercase">Unit Cost (Avg)</p>
-                    <p className="text-white font-mono text-xs md:text-sm">{formatCurrency(calculateUnitPrice(item.price, item.quantity))}</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">Unit Cost (Avg)</p>
+                    <p className="text-slate-900 dark:text-white font-mono text-xs md:text-sm">{formatCurrency(calculateUnitPrice(item.price, item.quantity))}</p>
                 </div>
                 <div>
-                    <p className="text-slate-500 text-[10px] uppercase">Class</p>
-                    <p className="text-white font-mono text-xs md:text-sm">{item.category}</p>
+                    <p className="text-slate-600 dark:text-slate-500 text-[10px] uppercase">Class</p>
+                    <p className="text-slate-900 dark:text-white font-mono text-xs md:text-sm">{item.category}</p>
                 </div>
             </div>
         </div>
 
         {/* Detail Column 3: Audit Trail */}
         <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+            <h4 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest flex items-center gap-2">
                 <History className="w-4 h-4" /> Recent Activity
             </h4>
-            <div className="p-3 md:p-4 rounded-xl bg-black/20 border border-white/5 h-[140px] overflow-y-auto custom-scrollbar">
+            <div className="p-3 md:p-4 rounded-xl bg-slate-100 dark:bg-black/20 border border-slate-200 dark:border-white/5 h-[140px] overflow-y-auto custom-scrollbar">
                 <ul className="space-y-3">
                     {item.history.slice(0, 5).map((log, i) => (
                         <li key={i} className="text-xs border-l-2 border-indigo-500/30 pl-3">
                             <div className="flex justify-between">
                                 <span className="text-indigo-300 font-bold">{log.action}</span>
-                                <span className="text-slate-600">{log.date.split(',')[0]}</span>
+                                <span className="text-slate-700 dark:text-slate-600">{log.date.split(',')[0]}</span>
                             </div>
-                            <p className="text-slate-400 mt-0.5 truncate">{log.details}</p>
+                            <p className="text-slate-600 dark:text-slate-400 mt-0.5 truncate">{log.details}</p>
                             <p className="text-slate-600 text-[10px] mt-0.5">by {log.user}</p>
                         </li>
                     ))}
@@ -292,8 +292,8 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 md:perspective-[1000px]">
         <div className="card-3d origin-left">
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight font-[Space_Grotesk] text-glow">eSTORE <span className="text-indigo-500">Stock</span></h2>
-          <p className="text-slate-400 mt-2 font-mono text-sm">{t.stockMaster}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight font-[Space_Grotesk] text-glow">eSTORE <span className="text-indigo-500">Stock</span></h2>
+          <p className="text-slate-600 dark:text-slate-400 mt-2 font-mono text-sm">{t.stockMaster}</p>
         </div>
         
         {canEdit && (
@@ -349,11 +349,11 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
       {/* Controls Bar: Search, Filter, Columns */}
       <div className="glass-panel p-3 rounded-2xl flex flex-col md:flex-row gap-4 items-center relative z-20 shadow-2xl">
         <div className="relative flex-1 w-full group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 dark:text-slate-400" />
           <input 
             type="text" 
             placeholder={t.smartSearch} 
-            className="w-full pl-12 pr-4 py-3 md:py-4 bg-black/20 border border-white/5 rounded-xl text-white focus:ring-0 placeholder:text-slate-600 font-mono text-sm transition-all focus:bg-black/40"
+            className="w-full pl-12 pr-4 py-3 md:py-4 bg-slate-100 dark:bg-black/20 border border-slate-200 dark:border-white/5 rounded-xl text-slate-900 dark:text-white focus:ring-0 placeholder:text-slate-600 font-mono text-sm transition-all focus:bg-slate-100 dark:bg-black/40"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -364,23 +364,23 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
             <div className="relative hidden md:block">
                 <button 
                     onClick={(e) => { e.stopPropagation(); setIsColumnMenuOpen(!isColumnMenuOpen); }}
-                    className={`flex items-center gap-2 px-4 py-3 md:py-4 rounded-xl transition-all border ${isColumnMenuOpen ? 'bg-indigo-600/20 text-indigo-400 border-indigo-500/30' : 'text-slate-400 hover:text-white hover:bg-white/5 border-transparent'}`}
+                    className={`flex items-center gap-2 px-4 py-3 md:py-4 rounded-xl transition-all border ${isColumnMenuOpen ? 'bg-indigo-600/20 text-indigo-400 border-indigo-500/30' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-white/5 border-transparent'}`}
                 >
                     <Columns className="w-4 h-4" />
                     <span className="font-bold text-sm">Columns</span>
                 </button>
 
                 {isColumnMenuOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-56 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
-                        <div className="text-xs font-bold text-slate-500 uppercase px-3 py-2">Toggle Columns</div>
+                    <div className="absolute top-full right-0 mt-2 w-56 bg-[#0a0a0a] border border-slate-300 dark:border-white/10 rounded-xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+                        <div className="text-xs font-bold text-slate-600 dark:text-slate-500 uppercase px-3 py-2">Toggle Columns</div>
                         {Object.entries(visibleColumns).map(([key, isVisible]) => (
                             <button
                                 key={key}
                                 onClick={() => setVisibleColumns(prev => ({ ...prev, [key]: !isVisible }))}
-                                className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-sm transition-colors"
+                                className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-white/5 text-sm transition-colors"
                             >
-                                <span className="text-slate-300 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                {isVisible ? <Eye className="w-4 h-4 text-indigo-400" /> : <EyeOff className="w-4 h-4 text-slate-600" />}
+                                <span className="text-slate-700 dark:text-slate-300 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                {isVisible ? <Eye className="w-4 h-4 text-indigo-400" /> : <EyeOff className="w-4 h-4 text-slate-700 dark:text-slate-600" />}
                             </button>
                         ))}
                     </div>
@@ -389,7 +389,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
 
             <button 
                 onClick={() => setShowLowStockOnly(!showLowStockOnly)}
-                className={`flex items-center gap-2 px-6 py-3 md:py-4 rounded-xl transition-all justify-center border flex-1 md:flex-none ${showLowStockOnly ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'text-slate-400 hover:text-white hover:bg-white/5 border-transparent'}`}
+                className={`flex items-center gap-2 px-6 py-3 md:py-4 rounded-xl transition-all justify-center border flex-1 md:flex-none ${showLowStockOnly ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-white/5 border-transparent'}`}
             >
             {showLowStockOnly ? <AlertTriangle className="w-4 h-4 animate-pulse" /> : <Filter className="w-4 h-4" />}
             <span className="font-bold text-sm">{t.lowStock}</span>
@@ -408,17 +408,17 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
             const unitPrice = calculateUnitPrice(item.price, item.quantity);
 
             return (
-                <div key={item.id} className={`glass-panel rounded-2xl overflow-hidden border transition-all ${isExpanded ? 'border-indigo-500/50 shadow-lg' : 'border-white/5'}`}>
+                <div key={item.id} className={`glass-panel rounded-2xl overflow-hidden border transition-all ${isExpanded ? 'border-indigo-500/50 shadow-lg' : 'border-slate-200 dark:border-white/5'}`}>
                     {/* Main Card Content */}
                     <div className="p-4" onClick={() => toggleRowExpansion(item.id)}>
                         <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-3">
                                 <button onClick={(e) => { e.stopPropagation(); toggleSelection(item.id); }} className="p-1 -ml-2">
-                                    {isSelected ? <CheckSquare className="w-5 h-5 text-indigo-500" /> : <Square className="w-5 h-5 text-slate-600" />}
+                                    {isSelected ? <CheckSquare className="w-5 h-5 text-indigo-500" /> : <Square className="w-5 h-5 text-slate-700 dark:text-slate-600" />}
                                 </button>
                                 <div>
-                                    <h3 className="text-white font-bold text-lg leading-tight">{item.name}</h3>
-                                    <span className="text-xs text-slate-500 font-mono">{item.materialNo}</span>
+                                    <h3 className="text-slate-900 dark:text-white font-bold text-lg leading-tight">{item.name}</h3>
+                                    <span className="text-xs text-slate-600 dark:text-slate-500 font-mono">{item.materialNo}</span>
                                 </div>
                             </div>
                             <span className={`text-[10px] px-2 py-1 rounded-lg border font-bold ${isLowStock ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'}`}>
@@ -427,27 +427,27 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 mb-4">
-                             <div className="bg-white/5 rounded-lg p-2">
-                                 <p className="text-[10px] text-slate-500 uppercase">Quantity</p>
-                                 <p className={`text-lg font-mono font-bold ${isLowStock ? 'text-rose-400' : 'text-emerald-400'}`}>{item.quantity} <span className="text-xs text-slate-500">{item.uom}</span></p>
+                             <div className="bg-slate-100 dark:bg-white/5 rounded-lg p-2">
+                                 <p className="text-[10px] text-slate-600 dark:text-slate-500 uppercase">Quantity</p>
+                                 <p className={`text-lg font-mono font-bold ${isLowStock ? 'text-rose-400' : 'text-emerald-400'}`}>{item.quantity} <span className="text-xs text-slate-600 dark:text-slate-500">{item.uom}</span></p>
                              </div>
-                             <div className="bg-white/5 rounded-lg p-2">
-                                 <p className="text-[10px] text-slate-500 uppercase">Total Valuation</p>
+                             <div className="bg-slate-100 dark:bg-white/5 rounded-lg p-2">
+                                 <p className="text-[10px] text-slate-600 dark:text-slate-500 uppercase">Total Valuation</p>
                                  <div className="flex flex-col">
-                                    <p className="text-white font-mono font-bold text-sm">{formatCurrency(item.price)}</p>
+                                    <p className="text-slate-900 dark:text-white font-mono font-bold text-sm">{formatCurrency(item.price)}</p>
                                     <p className="text-[10px] text-indigo-300 font-mono">@ {formatCurrency(unitPrice)}</p>
                                  </div>
                              </div>
                         </div>
 
-                        <div className="flex items-center justify-between text-xs text-slate-400">
+                        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
                             <div className="flex items-center gap-4">
                                 <span className="flex items-center gap-1"><Tag className="w-3 h-3" /> {item.category}</span>
                                 <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {item.sloc}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 {canEdit && (
-                                    <button onClick={(e) => openEditModal(e, item)} className="p-2 bg-white/5 rounded-lg text-indigo-400 hover:bg-indigo-500/20">
+                                    <button onClick={(e) => openEditModal(e, item)} className="p-2 bg-slate-100 dark:bg-white/5 rounded-lg text-indigo-400 hover:bg-indigo-500/20">
                                         <Pencil className="w-4 h-4" />
                                     </button>
                                 )}
@@ -464,21 +464,21 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
             )
         })}
         {currentItems.length === 0 && (
-            <div className="text-center py-12 text-slate-500">No items found.</div>
+            <div className="text-center py-12 text-slate-600 dark:text-slate-500">No items found.</div>
         )}
       </div>
 
       {/* =================== DESKTOP VIEW (TABLE) =================== */}
-      <div className="hidden md:block glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+      <div className="hidden md:block glass-panel rounded-3xl overflow-hidden border border-slate-300 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm min-w-[1000px] border-collapse">
-            <thead className="bg-black/40 text-xs uppercase tracking-widest text-indigo-300 font-bold font-[Space_Grotesk]">
+            <thead className="bg-slate-100 dark:bg-black/40 text-xs uppercase tracking-widest text-indigo-300 font-bold font-[Space_Grotesk]">
               <tr>
                 <th className="px-4 py-6 w-12 text-center">
-                    <button onClick={toggleSelectAll} className="hover:text-white transition-colors">
+                    <button onClick={toggleSelectAll} className="hover:text-slate-900 dark:text-white transition-colors">
                        {selectedIds.size === filteredItems.length && filteredItems.length > 0 ? 
                          <CheckSquare className="w-5 h-5 text-indigo-500" /> : 
-                         <Square className="w-5 h-5 text-slate-600" />
+                         <Square className="w-5 h-5 text-slate-700 dark:text-slate-600" />
                        }
                     </button>
                 </th>
@@ -521,9 +521,9 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                       
                       {visibleColumns.materialInfo && (
                           <td className="px-4 py-5">
-                              <p className="font-bold text-white text-lg group-hover:text-indigo-300 transition-colors">{item.name}</p>
+                              <p className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-indigo-300 transition-colors">{item.name}</p>
                               <div className="flex items-center gap-2 mt-1">
-                                <span className="text-xs bg-white/5 px-2 py-0.5 rounded text-slate-400 border border-white/5">{item.category}</span>
+                                <span className="text-xs bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/5">{item.category}</span>
                                 {item.isConsumable && <span className="text-xs bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">Consumable</span>}
                               </div>
                           </td>
@@ -532,8 +532,8 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                       {visibleColumns.identification && (
                           <td className="px-6 py-5">
                               <div className="flex flex-col">
-                                  <span className="text-slate-300 font-mono text-xs">MAT: {item.materialNo}</span>
-                                  {item.wbs && <span className="text-slate-500 font-mono text-[10px]">WBS: {item.wbs}</span>}
+                                  <span className="text-slate-700 dark:text-slate-300 font-mono text-xs">MAT: {item.materialNo}</span>
+                                  {item.wbs && <span className="text-slate-600 dark:text-slate-500 font-mono text-[10px]">WBS: {item.wbs}</span>}
                               </div>
                           </td>
                       )}
@@ -541,8 +541,8 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                       {visibleColumns.location && (
                           <td className="px-6 py-5">
                             <div className="text-xs">
-                                <div className="text-white font-bold">{item.sloc}</div>
-                                <div className="text-slate-500 font-mono">{item.rackNo || 'No Rack'}</div>
+                                <div className="text-slate-900 dark:text-white font-bold">{item.sloc}</div>
+                                <div className="text-slate-600 dark:text-slate-500 font-mono">{item.rackNo || 'No Rack'}</div>
                             </div>
                           </td>
                       )}
@@ -553,13 +553,13 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                                 <span className={`font-bold text-lg font-mono ${isLowStock ? 'text-rose-400' : 'text-emerald-400'}`}>
                                     {item.quantity}
                                 </span>
-                                <span className="text-xs text-slate-600">{item.uom}</span>
+                                <span className="text-xs text-slate-700 dark:text-slate-600">{item.uom}</span>
                             </div>
                           </td>
                       )}
 
                       {visibleColumns.valuation && (
-                          <td className="px-6 py-5 text-white font-mono">
+                          <td className="px-6 py-5 text-slate-900 dark:text-white font-mono">
                             <div className="flex flex-col items-start">
                                 <span className="font-bold">{formatCurrency(item.price)}</span>
                                 <span className="text-xs text-indigo-300/70 mt-1">@ {formatCurrency(unitPrice)}</span>
@@ -572,7 +572,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                             <ChevronDown className={`w-4 h-4 text-slate-600 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
                             {canEdit ? (
                             <>
-                                <button onClick={(e) => openEditModal(e, item)} className="p-2 hover:bg-indigo-500/10 text-slate-500 hover:text-indigo-400 rounded-lg"><Pencil className="w-4 h-4" /></button>
+                                <button onClick={(e) => openEditModal(e, item)} className="p-2 hover:bg-indigo-500/10 text-slate-600 dark:text-slate-500 hover:text-indigo-400 rounded-lg"><Pencil className="w-4 h-4" /></button>
                             </>
                             ) : <Lock className="w-4 h-4 text-slate-600 ml-auto" />}
                         </div>
@@ -580,7 +580,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                     </tr>
                     
                     {(isExpanded || isClosing) && (
-                      <tr className="bg-black/20">
+                      <tr className="bg-slate-100 dark:bg-black/20">
                         <td colSpan={colSpan} className="p-0 border-0">
                           <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isExpanded && !isClosing ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
                             {renderDetailContent(item)}
@@ -593,7 +593,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
               })}
               {currentItems.length === 0 && (
                  <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                    <td colSpan={7} className="px-6 py-12 text-center text-slate-600 dark:text-slate-500">
                         No material found matching your criteria.
                     </td>
                  </tr>
@@ -604,13 +604,13 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
       </div>
 
       {/* PAGINATION CONTROLS */}
-      <div className="flex flex-col md:flex-row justify-between items-center p-4 border-t border-white/5 bg-black/40 gap-4 rounded-b-3xl glass-panel mt-0">
-           <div className="flex items-center gap-2 text-sm text-slate-400">
+      <div className="flex flex-col md:flex-row justify-between items-center p-4 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-black/40 gap-4 rounded-b-3xl glass-panel mt-0">
+           <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
               <span>Rows per page:</span>
               <select 
                  value={itemsPerPage}
                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                 className="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white outline-none focus:border-indigo-500"
+                 className="bg-slate-100 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-lg px-2 py-1 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
               >
                   <option value={10}>10</option>
                   <option value={20}>20</option>
@@ -625,7 +625,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
               <button 
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 text-slate-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                  <ChevronLeft className="w-4 h-4" />
               </button>
@@ -643,7 +643,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
                             <button
                                 key={pageNum}
                                 onClick={() => setCurrentPage(pageNum)}
-                                className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${currentPage === pageNum ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
+                                className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${currentPage === pageNum ? 'bg-indigo-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:bg-white/5'}`}
                             >
                                 {pageNum}
                             </button>
@@ -656,7 +656,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, setItems, userRole,
               <button 
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages || totalPages === 0}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 text-slate-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                  <ChevronRight className="w-4 h-4" />
               </button>
