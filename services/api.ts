@@ -301,11 +301,106 @@ export const purchaseApi = {
 };
 
 export const userApi = {
-    async fetchAll(): Promise<UserProfile[]> { return []; },
-    async getByEmail(email: string): Promise<UserProfile | null> { return null; },
-    async create(user: UserProfile): Promise<UserProfile | null> { return null; },
-    async update(user: UserProfile): Promise<boolean> { return true; },
-    async delete(id: string): Promise<boolean> { return true; }
+    async fetchAll(): Promise<UserProfile[]> {
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching users:', error);
+            return [];
+        }
+
+        return data.map((u: any) => ({
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            role: u.role as UserRole,
+            status: u.status,
+            lastActive: u.last_active,
+            avatar: u.avatar
+        }));
+    },
+
+    async getByEmail(email: string): Promise<UserProfile | null> {
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (error || !data) {
+            console.error('Error fetching user by email:', error);
+            return null;
+        }
+
+        return {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            role: data.role as UserRole,
+            status: data.status,
+            lastActive: data.last_active,
+            avatar: data.avatar
+        };
+    },
+
+    async create(user: UserProfile): Promise<UserProfile | null> {
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .insert([{
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                status: user.status,
+                last_active: user.lastActive || new Date().toISOString()
+            }])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating user:', error);
+            return null;
+        }
+
+        return {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            role: data.role as UserRole,
+            status: data.status,
+            lastActive: data.last_active,
+            avatar: data.avatar
+        };
+    },
+
+    async update(user: UserProfile): Promise<boolean> {
+        const { error } = await supabase
+            .from('user_profiles')
+            .update({
+                name: user.name,
+                role: user.role,
+                status: user.status,
+                last_active: user.lastActive || new Date().toISOString()
+            })
+            .eq('id', user.id);
+
+        if (error) {
+            console.error('Error updating user:', error);
+            return false;
+        }
+        return true;
+    },
+
+    async delete(id: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('user_profiles')
+            .delete()
+            .eq('id', id);
+
+        return !error;
+    }
 };
 
 export const stockOpnameApi = {
