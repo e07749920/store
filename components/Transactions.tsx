@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { TransactionLog, UserRole, InventoryItem, MaterialOutRecord, MaterialInRecord } from '../types';
-import { ArrowUpRight, ArrowDownLeft, Search, Send, X, Loader2, FileText, Hash, CreditCard, User, ChevronDown, ChevronUp, Box, Calendar, ShoppingBag, PackagePlus } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Search, Send, X, Loader2, FileText, Hash, CreditCard, User, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Box, Calendar, ShoppingBag, PackagePlus } from 'lucide-react';
 import { transactionApi, inventoryApi } from '../services/api';
 
 interface TransactionsProps {
@@ -54,10 +54,12 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
 
   // --- 1. FILTERING & GROUPING LOGIC ---
   const filteredRawTransactions = useMemo(() => {
+      if (!transactions || !Array.isArray(transactions)) return [];
+
       return transactions
-        .filter(t => t.type === activeTab)
-        .filter(t => 
-          t.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        .filter(t => t && t.type === activeTab)
+        .filter(t =>
+          t.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           t.materialNo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (t.issueNumber || t.grNumber)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           t.remark?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -68,15 +70,17 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
       const groups: Record<string, TransactionGroup> = {};
 
       filteredRawTransactions.forEach(tx => {
+          if (!tx) return;
+
           // Key: OUT -> Issue Number, IN -> GR Number
-          const key = activeTab === 'OUT' 
-             ? (tx.issueNumber || 'MISC-OUT') 
+          const key = activeTab === 'OUT'
+             ? (tx.issueNumber || 'MISC-OUT')
              : (tx.grNumber || 'MISC-IN');
 
           if (!groups[key]) {
               groups[key] = {
                   groupKey: key,
-                  date: tx.date,
+                  date: tx.date || new Date().toISOString().split('T')[0],
                   receiver: tx.receiver || '-',
                   secondaryInfo: activeTab === 'OUT' ? (tx.wbs || '-') : (tx.po || '-'),
                   items: [],
@@ -85,11 +89,15 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
               };
           }
           groups[key].items.push(tx);
-          groups[key].totalQty += tx.quantity;
+          groups[key].totalQty += (tx.quantity || 0);
           groups[key].itemCount += 1;
       });
 
-      return Object.values(groups).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return Object.values(groups).sort((a, b) => {
+          const dateA = new Date(a.date || 0).getTime();
+          const dateB = new Date(b.date || 0).getTime();
+          return dateB - dateA;
+      });
   }, [filteredRawTransactions, activeTab]);
 
   // --- 2. PAGINATION LOGIC ---
@@ -278,7 +286,9 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
           </div>
 
           {/* Groups List */}
-          {currentData.map((g) => {
+          {currentData && currentData.length > 0 ? currentData.map((g) => {
+              if (!g) return null;
+
               const isExpanded = expandedGroups.has(g.groupKey);
               const themeColor = activeTab === 'OUT' ? 'rose' : 'emerald';
               const Icon = activeTab === 'OUT' ? FileText : PackagePlus;
@@ -358,17 +368,23 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
-                                        {g.items.map((item, idx) => (
+                                        {g.items && g.items.length > 0 ? g.items.map((item, idx) => (
+                                            item ? (
                                             <tr key={idx} className="hover:bg-slate-100 dark:bg-white/5">
-                                                <td className={`px-4 py-3 pl-6 font-mono text-${themeColor}-300`}>{item.materialNo}</td>
-                                                <td className="px-4 py-3 font-bold text-slate-200">{item.itemName}</td>
-                                                <td className="px-4 py-3 text-center font-mono font-bold text-white">{item.quantity}</td>
+                                                <td className={`px-4 py-3 pl-6 font-mono text-${themeColor}-300`}>{item.materialNo || '-'}</td>
+                                                <td className="px-4 py-3 font-bold text-slate-900 dark:text-slate-200">{item.itemName || '-'}</td>
+                                                <td className="px-4 py-3 text-center font-mono font-bold text-slate-900 dark:text-white">{item.quantity || 0}</td>
                                                 <td className="px-4 py-3 text-xs font-mono text-slate-600 dark:text-slate-400">
-                                                    {activeTab === 'OUT' ? item.glAccount : (item.reference || item.wbs || '-')}
+                                                    {activeTab === 'OUT' ? (item.glAccount || '-') : (item.reference || item.wbs || '-')}
                                                 </td>
                                                 <td className="px-4 py-3 text-xs text-slate-600 dark:text-slate-500 italic">{item.remark || '-'}</td>
                                             </tr>
-                                        ))}
+                                            ) : null
+                                        )) : (
+                                            <tr>
+                                                <td colSpan={5} className="px-4 py-6 text-center text-slate-600 dark:text-slate-500">No items found</td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -376,9 +392,7 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
                     )}
                 </div>
               );
-          })}
-
-          {currentData.length === 0 && (
+          }) : (
              <div className="text-center py-12 text-slate-600 dark:text-slate-500 glass-panel rounded-2xl border border-slate-200 dark:border-white/5">
                  <Box className="w-12 h-12 mx-auto mb-3 opacity-20" />
                  No {activeTab === 'IN' ? 'Inbound' : 'Outbound'} transactions found.
@@ -390,8 +404,8 @@ export const Transactions: React.FC<TransactionsProps> = ({ transactions, setTra
       <div className="flex justify-between items-center bg-slate-100 dark:bg-black/20 p-4 rounded-2xl border border-slate-200 dark:border-white/5">
          <div className="text-xs text-slate-600 dark:text-slate-400">Page <span className="text-slate-900 dark:text-white font-bold">{currentPage}</span> of {totalPages || 1}</div>
          <div className="flex gap-2">
-            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 rounded-lg disabled:opacity-30 text-white"><ChevronLeft className="w-4 h-4" /></button>
-            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 rounded-lg disabled:opacity-30 text-white"><ChevronRight className="w-4 h-4" /></button>
+            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg disabled:opacity-30 text-slate-900 dark:text-white transition-colors"><ChevronLeft className="w-4 h-4" /></button>
+            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg disabled:opacity-30 text-slate-900 dark:text-white transition-colors"><ChevronRight className="w-4 h-4" /></button>
          </div>
       </div>
 
