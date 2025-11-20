@@ -23,13 +23,36 @@ const App: React.FC = () => {
   const [transactions, setTransactions] = useState<TransactionLog[]>([]);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
-  const [settings, setSettings] = useState<AppSettings>({ supabaseUrl: 'https://kgwpxqwlqnfvbzyjtkxi.supabase.co', supabaseKey: '***', enableRealtime: true });
+  const [settings, setSettings] = useState<AppSettings>({ supabaseUrl: 'https://kgwpxqwlqnfvbzyjtkxi.supabase.co', supabaseKey: '***', enableRealtime: true, theme: 'dark' });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   
   // Language State (Default English)
   const [language, setLanguage] = useState<Language>('en');
+
+  // Theme State
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return (savedTheme as 'light' | 'dark') || 'dark';
+  });
+
+  // Apply theme to HTML element
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    } else {
+      root.classList.remove('light');
+      root.classList.add('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   // Check active session on startup
   useEffect(() => {
@@ -102,7 +125,7 @@ const App: React.FC = () => {
 
   if (isAuthChecking) {
       return (
-          <div className="h-dvh w-screen flex flex-col items-center justify-center bg-black text-white gap-4">
+          <div className="h-dvh w-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-black text-slate-900 dark:text-white gap-4">
               <div className="w-12 h-12 rounded-full border-4 border-indigo-500/30 border-t-indigo-500 animate-spin"></div>
               <p className="font-mono text-sm tracking-widest animate-pulse">ESTABLISHING UPLINK...</p>
           </div>
@@ -116,29 +139,29 @@ const App: React.FC = () => {
   const t = translations[language];
 
   return (
-    <div className="flex h-dvh w-screen overflow-hidden bg-transparent text-slate-200 animate-in fade-in duration-1000">
+    <div className="flex h-dvh w-screen overflow-hidden bg-slate-50 dark:bg-transparent text-slate-900 dark:text-slate-200 animate-in fade-in duration-1000">
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-40 md:hidden animate-in fade-in duration-200" onClick={() => setMobileMenuOpen(false)}></div>
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/90 backdrop-blur-lg z-40 md:hidden animate-in fade-in duration-200" onClick={() => setMobileMenuOpen(false)}></div>
       )}
       
-      <div className={`fixed inset-y-0 left-0 transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) z-50 bg-black md:bg-transparent w-72`}>
-        <Sidebar currentView={view} setView={setView} currentUser={currentUser} onLogout={handleLogout} lang={language} t={t} />
+      <div className={`fixed inset-y-0 left-0 transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) z-50 bg-white dark:bg-black md:bg-transparent w-72`}>
+        <Sidebar currentView={view} setView={setView} currentUser={currentUser} onLogout={handleLogout} lang={language} t={t} theme={theme} onToggleTheme={toggleTheme} />
       </div>
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative md:perspective-[1000px]">
         
-        <div className="md:hidden glass-panel border-b border-white/10 p-4 flex items-center justify-between z-30 relative">
-           <div className="font-bold text-white font-[Space_Grotesk] tracking-wide text-glow text-xl">eSTORE</div>
-           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-slate-300 hover:bg-white/10 rounded-lg transition-colors">
+        <div className="md:hidden glass-panel border-b border-slate-200 dark:border-white/10 p-4 flex items-center justify-between z-30 relative">
+           <div className="font-bold text-slate-900 dark:text-white font-[Space_Grotesk] tracking-wide text-glow text-xl">eSTORE</div>
+           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition-colors">
              {mobileMenuOpen ? <X /> : <Menu />}
            </button>
         </div>
 
         {isLoadingData && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-black/50 backdrop-blur-sm">
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-                    <p className="text-white font-mono text-sm">Synchronizing Database...</p>
+                    <p className="text-slate-900 dark:text-white font-mono text-sm">Synchronizing Database...</p>
                 </div>
             </div>
         )}
@@ -159,10 +182,11 @@ const App: React.FC = () => {
             {view === 'intelligence' && <AIInsights items={items} userRole={currentUser.role} />}
             {view === 'transactions' && <Transactions transactions={transactions} setTransactions={setTransactions} items={items} setItems={setItems} userRole={currentUser.role} />}
             {view === 'settings' && (
-                <Settings 
-                    settings={settings} setSettings={setSettings} 
-                    userRole={currentUser.role} 
+                <Settings
+                    settings={settings} setSettings={setSettings}
+                    userRole={currentUser.role}
                     language={language} setLanguage={setLanguage}
+                    theme={theme} onToggleTheme={toggleTheme}
                 />
             )}
           </div>
