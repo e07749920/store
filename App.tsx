@@ -10,6 +10,7 @@ import { Transactions } from './components/Transactions';
 import { Purchase } from './components/Purchase';
 import { Settings } from './components/Settings';
 import { UserManagement } from './components/UserManagement';
+import { UserProfile as UserProfileComponent } from './components/UserProfile';
 import { InventoryItem, TransactionLog, UserProfile, PurchaseOrder, AppSettings } from './types';
 import { Menu, X, Loader2 } from 'lucide-react';
 import { inventoryApi, transactionApi, purchaseApi, userApi } from './services/api';
@@ -178,6 +179,7 @@ const App: React.FC = () => {
             )}
             {view === 'purchase' && <Purchase items={items} setItems={setItems} purchaseOrders={purchaseOrders} setPurchaseOrders={setPurchaseOrders} setTransactions={setTransactions} userRole={currentUser.role} />}
             {view === 'opname' && <StockOpname items={items} setItems={setItems} userRole={currentUser.role} />}
+            {view === 'profile' && <UserProfileComponent currentUser={currentUser} setCurrentUser={setCurrentUser} />}
             {view === 'users' && <UserManagement users={users} setUsers={setUsers} currentUser={currentUser} />}
             {view === 'intelligence' && <AIInsights items={items} userRole={currentUser.role} />}
             {view === 'transactions' && <Transactions transactions={transactions} setTransactions={setTransactions} items={items} setItems={setItems} userRole={currentUser.role} />}

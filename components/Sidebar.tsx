@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { LayoutDashboard, Package, ArrowRightLeft, Sparkles, Settings, LogOut, Hexagon, ClipboardList, Shield, ShoppingCart, Users, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Package, ArrowRightLeft, Sparkles, Settings, LogOut, Hexagon, ClipboardList, Shield, ShoppingCart, Users, Sun, Moon, UserCircle } from 'lucide-react';
 import { UserProfile } from '../types';
 import { Language } from '../lib/i18n';
+import { canAccessModule } from '../lib/permissions';
 
 interface SidebarProps {
   currentView: string;
@@ -16,19 +17,20 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, currentUser, onLogout, t, theme, onToggleTheme }) => {
-  
+
   const allNavItems = [
-    { id: 'dashboard', label: t.dashboard, icon: LayoutDashboard, roles: ['ADMIN', 'STAFF', 'USER'] },
-    { id: 'inventory', label: t.inventory, icon: Package, roles: ['ADMIN', 'STAFF', 'USER'] },
-    { id: 'purchase', label: t.purchase, icon: ShoppingCart, roles: ['ADMIN', 'STAFF'] },
-    { id: 'opname', label: t.stockOpname, icon: ClipboardList, roles: ['ADMIN', 'STAFF'] },
-    { id: 'transactions', label: t.transactions, icon: ArrowRightLeft, roles: ['ADMIN', 'STAFF'] },
-    { id: 'users', label: t.users, icon: Users, roles: ['ADMIN'] },
-    { id: 'intelligence', label: t.intelligence, icon: Sparkles, roles: ['ADMIN'] },
-    { id: 'settings', label: t.settings, icon: Settings, roles: ['ADMIN'] },
+    { id: 'dashboard', label: t.dashboard, icon: LayoutDashboard },
+    { id: 'inventory', label: t.inventory, icon: Package },
+    { id: 'purchase', label: t.purchase, icon: ShoppingCart },
+    { id: 'opname', label: t.stockOpname, icon: ClipboardList },
+    { id: 'transactions', label: t.transactions, icon: ArrowRightLeft },
+    { id: 'profile', label: 'Profile', icon: UserCircle },
+    { id: 'users', label: t.users, icon: Users },
+    { id: 'intelligence', label: t.intelligence, icon: Sparkles },
+    { id: 'settings', label: t.settings, icon: Settings },
   ];
 
-  const navItems = allNavItems.filter(item => item.roles.includes(currentUser.role));
+  const navItems = allNavItems.filter(item => canAccessModule(currentUser.role, item.id as any));
 
   return (
     <div className="h-full w-72 p-6 flex flex-col md:perspective-[1000px]">

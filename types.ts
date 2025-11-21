@@ -33,7 +33,8 @@ export interface InventoryItem {
   isConsumable: boolean;
   lastUpdated: string;
   description?: string;
-  history: AuditEntry[]; 
+  imageUrl?: string;
+  history: AuditEntry[];
 }
 
 // Tipe untuk tabel 'material_transactions' (Buku Besar / Ledger)

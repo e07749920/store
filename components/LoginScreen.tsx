@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Hexagon, Lock, User, ArrowRight, ScanLine, ShieldCheck, Fingerprint, AlertCircle, Mail, UserPlus } from 'lucide-react';
+import { Hexagon, Lock, ArrowRight, ScanLine, ShieldCheck, Fingerprint, AlertCircle, Mail } from 'lucide-react';
 import { UserProfile } from '../types';
 import { supabase } from '../lib/supabaseClient';
 import { userApi } from '../services/api';
@@ -12,8 +12,6 @@ interface LoginScreenProps {
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -24,53 +22,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setError(null);
 
     try {
-      if (isSignUp) {
-        // --- REGISTRATION FLOW ---
-        
-        // 1. Create User in Supabase Auth
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: { full_name: name }
-          }
-        });
-
-        if (authError) throw authError;
-
-        if (authData.user) {
-           // 2. Create Profile in Database
-           const newProfile: UserProfile = {
-             id: '', // Database generates UUID
-             name: name || email.split('@')[0],
-             email: email,
-             role: 'ADMIN', // Default role for prototype/first user
-             status: 'ACTIVE',
-             lastActive: new Date().toLocaleString()
-           };
-           
-           // Check if profile already exists to avoid duplicate error
-           const existingProfile = await userApi.getByEmail(email);
-           
-           let finalProfile: UserProfile | null = null;
-
-           if (!existingProfile) {
-              finalProfile = await userApi.create(newProfile);
-           } else {
-              finalProfile = existingProfile;
-           }
-           
-           if (!finalProfile) {
-             throw new Error("Account created in Auth, but failed to save Profile data.");
-           }
-
-           // Auto login
-           onLogin(finalProfile);
-        } else {
-           // Sometimes signup requires email confirmation
-           setError("Registration successful. Please check your email for confirmation if enabled, or try logging in.");
-        }
-      } else {
         // --- LOGIN FLOW ---
 
         // 1. Authenticate with Supabase Auth
@@ -110,7 +61,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
              throw new Error("System Error: Unable to load or create user profile.");
           }
         }
-      }
     } catch (err: any) {
       console.error("Auth failed:", err);
       setError(err.message || "Authentication failed.");
@@ -168,22 +118,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
             {/* Form */}
             <form onSubmit={handleAuth} className="space-y-5 relative z-10">
-              
-              {isSignUp && (
-                <div className="group relative animate-in slide-in-from-bottom-4 fade-in duration-300">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-500 group-focus-within:text-indigo-400 transition-colors">
-                    <User className="w-5 h-5" />
-                  </div>
-                  <input 
-                    type="text" 
-                    placeholder="Full Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-xl py-4 pl-12 pr-4 text-slate-900 dark:text-white placeholder:text-slate-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all font-mono text-sm"
-                    required={isSignUp}
-                  />
-                </div>
-              )}
 
               <div className="group relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-500 group-focus-within:text-indigo-400 transition-colors">
@@ -213,10 +147,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 />
               </div>
 
-              <button 
+              <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full relative overflow-hidden font-bold py-4 rounded-xl transition-all duration-300 shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_50px_rgba(99,102,241,0.5)] hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0 ${isSignUp ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-indigo-600 hover:bg-indigo-500 text-white'}`}
+                className="w-full relative overflow-hidden font-bold py-4 rounded-xl transition-all duration-300 shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_50px_rgba(99,102,241,0.5)] hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0 bg-indigo-600 hover:bg-indigo-500 text-white"
               >
                 {isLoading ? (
                    <div className="flex items-center justify-center gap-3">
@@ -225,25 +159,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                    </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
-                    <span>{isSignUp ? 'CREATE ACCOUNT' : 'INITIALIZE SESSION'}</span>
+                    <span>INITIALIZE SESSION</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 )}
               </button>
             </form>
 
-            {/* Footer / Toggle Mode */}
+            {/* Footer */}
             <div className="mt-6 pt-6 border-t border-slate-200 dark:border-white/5 text-center">
-               <button 
-                 onClick={() => { setIsSignUp(!isSignUp); setError(null); setName(''); }}
-                 className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-mono transition-colors flex items-center justify-center gap-2 w-full"
-               >
-                 {isSignUp ? (
-                   <>Already have an account? <span className="text-indigo-400 font-bold">Login</span></>
-                 ) : (
-                   <>New System User? <span className="text-emerald-400 font-bold flex items-center gap-1"><UserPlus className="w-3 h-3" /> Register</span></>
-                 )}
-               </button>
+               <p className="text-xs text-slate-600 dark:text-slate-400 font-mono">
+                 Need an account? Contact your administrator
+               </p>
             </div>
 
             <div className="mt-4 flex justify-between items-center text-[10px] text-slate-600 font-mono">

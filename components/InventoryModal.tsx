@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { InventoryItem, ItemCategory } from '../types';
-import { X, Save, Loader2, Sparkles, FileText, Layers, Briefcase, Box, DollarSign, ScanLine, MapPin } from 'lucide-react';
+import { X, Save, Loader2, Sparkles, FileText, Layers, Briefcase, Box, DollarSign, ScanLine, MapPin, Upload, Image as ImageIcon, Trash2 } from 'lucide-react';
 import { suggestItemDetails } from '../services/geminiService';
 import { Language } from '../lib/i18n';
+import { storageService } from '../services/storage';
 
 interface InventoryModalProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
   isOpen, onClose, onSave, initialData, isSaving, t, lang 
 }) => {
   const [isAISuggesting, setIsAISuggesting] = useState(false);
-  
+
   // Form State
   const [name, setName] = useState('');
   const [category, setCategory] = useState<string>('SPARE PART');
@@ -35,6 +36,12 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
   const [prNumber, setPrNumber] = useState('');
   const [wbs, setWbs] = useState('');
   const [isConsumable, setIsConsumable] = useState(false);
+
+  // Image State
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   // Initialize form
   useEffect(() => {
@@ -55,6 +62,8 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
         setPrNumber(initialData.prNumber || '');
         setWbs(initialData.wbs || '');
         setIsConsumable(initialData.isConsumable);
+        setImageUrl(initialData.imageUrl || '');
+        setImagePreview(initialData.imageUrl || '');
       } else {
         // Reset
         setName('');
@@ -72,15 +81,59 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
         setPrNumber('');
         setWbs('');
         setIsConsumable(false);
+        setImageUrl('');
+        setImagePreview('');
+        setImageFile(null);
       }
     }
   }, [isOpen, initialData]);
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageFile(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+    setImageUrl('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let finalImageUrl = imageUrl;
+
+    if (imageFile) {
+      setIsUploadingImage(true);
+      try {
+        const compressed = await storageService.compressImage(imageFile);
+        finalImageUrl = await storageService.uploadImage(compressed, materialNo);
+
+        if (initialData?.imageUrl && initialData.imageUrl !== finalImageUrl) {
+          await storageService.deleteImage(initialData.imageUrl);
+        }
+      } catch (error: any) {
+        console.error('Image upload failed:', error);
+        alert(`Image upload failed: ${error.message}`);
+        setIsUploadingImage(false);
+        return;
+      }
+      setIsUploadingImage(false);
+    }
+
     await onSave({
       name, category, quantity, price, description, materialNo, sloc, rackNo,
-      uom, minStock, maxStock, prStatus, prNumber, wbs, isConsumable
+      uom, minStock, maxStock, prStatus, prNumber, wbs, isConsumable,
+      imageUrl: finalImageUrl
     });
   };
 
@@ -171,6 +224,49 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                 />
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* Section 1.5: Image Upload */}
+                <div className="bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-2xl p-5">
+                    <h4 className="text-purple-400 font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> Item Image
+                    </h4>
+                    <div className="space-y-4">
+                        {imagePreview ? (
+                            <div className="relative group">
+                                <img
+                                    src={imagePreview}
+                                    alt="Item preview"
+                                    className="w-full h-48 object-cover rounded-xl border border-slate-300 dark:border-white/10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="absolute top-2 right-2 p-2 bg-rose-500 hover:bg-rose-600 text-white rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="border-2 border-dashed border-slate-300 dark:border-white/10 rounded-xl p-8 text-center hover:border-purple-500 transition-colors">
+                                <Upload className="w-12 h-12 mx-auto mb-3 text-slate-600 dark:text-slate-500" />
+                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">Click to upload image</p>
+                                <p className="text-xs text-slate-600 dark:text-slate-500">JPG, PNG, or WebP (max 5MB)</p>
+                                <input
+                                    type="file"
+                                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                                    onChange={handleImageSelect}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                            </div>
+                        )}
+                        {imageFile && (
+                            <p className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                                <ImageIcon className="w-3 h-3" />
+                                {imageFile.name} ({(imageFile.size / 1024).toFixed(1)} KB)
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -296,14 +392,14 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
             >
                 {t.cancel}
             </button>
-            <button 
-                type="submit" 
+            <button
+                type="submit"
                 form="inventory-form"
-                disabled={isSaving} 
+                disabled={isSaving || isUploadingImage}
                 className="w-full md:w-auto px-8 py-3.5 bg-indigo-600 text-slate-900 dark:text-white font-bold rounded-xl hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.4)] flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 hover:scale-[1.02]"
             >
-                {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />}
-                {initialData ? t.save : t.save}
+                {(isSaving || isUploadingImage) ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />}
+                {isUploadingImage ? 'Uploading...' : (isSaving ? 'Saving...' : (initialData ? t.save : t.save))}
             </button>
         </div>
 
